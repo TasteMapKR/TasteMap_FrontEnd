@@ -1,5 +1,8 @@
+// Main.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import CourseCard from '../component/CourseCard';
+import { useNavigate } from 'react-router-dom';
 
 const API_BASE_URL = "http://localhost:8080";
 
@@ -9,16 +12,17 @@ const Main = () => {
         { value: 'MEAL', displayName: '식사' },
         { value: 'MIXED', displayName: '혼합' }
     ];
-
+    
+    const navigate = useNavigate();
     const [selectedCategory, setSelectedCategory] = useState(categories[0].value);
     const [courses, setCourses] = useState([]);
-    const [page, setPage] = useState(0);
-    const [size, setSize] = useState(10);
+    const [page, setPage] = useState(1); // 페이지 1부터 시작하도록 수정
+    const [size, setSize] = useState(4);
     const [totalPages, setTotalPages] = useState(0);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const fetchCoursesByCategory = async (selectedPage = 0) => {
+    const fetchCoursesByCategory = async (selectedPage = 1) => {
         setLoading(true);
         setError(null);
 
@@ -28,7 +32,7 @@ const Main = () => {
             const response = await axios.get(`${API_BASE_URL}/api/course/category`, {
                 params: {
                     category: selectedCategory,
-                    page: selectedPage,
+                    page: selectedPage - 1, // 페이지 요청을 0부터 시작하도록 수정
                     size: size
                 },
                 headers: {
@@ -56,23 +60,29 @@ const Main = () => {
     useEffect(() => {
         const token = localStorage.getItem('Access');
         if (token) {
-            fetchCoursesByCategory();
+            fetchCoursesByCategory(page);
         } else {
             setError("Access token is missing. Please log in again.");
         }
     }, [selectedCategory, page]);
 
     const handlePageChange = (newPage) => {
-        if (newPage >= 0 && newPage < totalPages) {
+        if (newPage >= 1 && newPage <= totalPages) {
             setPage(newPage);
         }
     };
 
     return (
         <div>
-            <h1>Courses by Category</h1>
+            <h1>카테고리별 코스</h1>
+            <button
+                title='생성하기'
+                onClick={() => navigate('/create')}
+            >
+                생성하기
+            </button>
             <label>
-                Select Category:
+                카테고리 선택:
                 <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
                     {categories.map(category => (
                         <option key={category.value} value={category.value}>
@@ -82,41 +92,44 @@ const Main = () => {
                 </select>
             </label>
 
-            {loading && <p>Loading...</p>}
+            {loading && <p>로딩 중...</p>}
             {error && <p style={{ color: 'red' }}>{error}</p>}
 
-            <ul>
+            <div style={styles.courseList}>
                 {courses.length > 0 ? (
                     courses.map(course => (
-                        <li key={course.id}>
-                            <h2>{course.title}</h2>
-                            <p>Category: {course.category}</p>
-                            <p>Name: {course.name}</p>
-                            {course.profile_image && <img src={course.profile_image} alt={course.name} />}
-                        </li>
+                        <CourseCard key={course.id} course={course} />
                     ))
                 ) : (
-                    <p>No courses found.</p>
+                    <p>코스가 없습니다.</p>
                 )}
-            </ul>
+            </div>
 
             <div>
                 <button
                     onClick={() => handlePageChange(page - 1)}
-                    disabled={page === 0 || loading}
+                    disabled={page === 1 || loading}
                 >
-                    Previous
+                    이전
                 </button>
-                <span> Page {page + 1} of {totalPages} </span>
+                <span> 페이지 {page} / {totalPages} </span>
                 <button
                     onClick={() => handlePageChange(page + 1)}
-                    disabled={page + 1 >= totalPages || loading}
+                    disabled={page >= totalPages || loading}
                 >
-                    Next
+                    다음
                 </button>
             </div>
         </div>
     );
+};
+
+const styles = {
+    courseList: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+    }
 };
 
 export default Main;
