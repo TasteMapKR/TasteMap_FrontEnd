@@ -24,7 +24,9 @@ const Update = () => {
     const { fields, append, remove } = useFieldArray({ control, name: 'roots' });
     const [courseImage, setCourseImage] = useState(null);
     const [rootImages, setRootImages] = useState([]);
+    const [places, setPlaces] = useState(null);
 
+    // Fetch existing course data
     useEffect(() => {
         const fetchCourseData = async () => {
             try {
@@ -46,6 +48,35 @@ const Update = () => {
         fetchCourseData();
     }, [id, setValue]);
 
+    // Load Kakao Maps API
+    useEffect(() => {
+        const script = document.createElement('script');
+        script.src = "https://dapi.kakao.com/v2/maps/sdk.js?appkey=954c56e411af6cf22c15660906e30af8&libraries=services";
+        script.async = true;
+        script.onload = () => {
+            const kakao = window.kakao;
+            const placesInstance = new kakao.maps.services.Places();
+            setPlaces(placesInstance);
+        };
+        document.body.appendChild(script);
+    }, []);
+
+    // Address search function
+    const searchAddress = (index) => {
+        const address = prompt("주소를 입력해주세요.");
+        if (address && places) {
+            places.keywordSearch(address, (data, status) => {
+                if (status === window.kakao.maps.services.Status.OK) {
+                    const firstResult = data[0];
+                    setValue(`roots[${index}].address`, firstResult.address_name);
+                } else {
+                    alert("주소를 찾을 수 없습니다.");
+                }
+            });
+        }
+    };
+
+    // Handle image changes
     const onCourseImageChange = (e) => setCourseImage(e.target.files[0]);
 
     const onRootImageChange = (index) => (e) => {
@@ -57,19 +88,17 @@ const Update = () => {
         });
     };
 
+    // Handle form submission
     const onSubmit = async (data) => {
         const formData = new FormData();
 
         if (courseImage) formData.append('courseImage', courseImage);
-        
-        // JSON 데이터를 Blob으로 변환하여 formData에 추가
         formData.append('course', new Blob([JSON.stringify({
             title: data.title,
             content: data.content,
             category: data.category
         })], { type: 'application/json' }));
 
-        // 루트 데이터를 JSON으로 변환하여 formData에 추가
         formData.append('roots', new Blob([JSON.stringify(data.roots)], { type: 'application/json' }));
 
         rootImages.forEach((image, index) => {
@@ -162,7 +191,8 @@ const Update = () => {
                         render={({ field }) => (
                             <div>
                                 <label>루트 주소</label>
-                                <input {...field} />
+                                <input {...field} readOnly /> {/* 읽기 전용으로 설정 */}
+                                <button type="button" onClick={() => searchAddress(index)}>주소 검색</button>
                                 {errors.roots?.[index]?.address && <p style={{ color: 'red' }}>{errors.roots[index].address.message}</p>}
                             </div>
                         )}

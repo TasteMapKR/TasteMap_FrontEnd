@@ -69,6 +69,7 @@ const Course = () => {
 
             {/* 업데이트 버튼 추가 */}
             <button onClick={() => navigate(`/update/${id}`)}>코스 업데이트</button>
+            <button onClick={() => navigate(`/course/${id}/feedback`)}>코스 평가보기</button>
         </div>
     );
 };

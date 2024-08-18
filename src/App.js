@@ -6,6 +6,7 @@ import RedirectHandler from './mono/page/RedirectHandler';
 import Create from './mono/page/Create';
 import Course from './mono/page/Course';
 import Update from './mono/page/Update';
+import Feedback from './mono/page/Feedback';
 const App = () => {
     return (
         <Router>
@@ -16,6 +17,7 @@ const App = () => {
                 <Route path="/create" element={<Create />} />
                 <Route path="/course/:id" element={<Course />} />
                 <Route path="/update/:id" element={<Update />} />
+                <Route path="/course/:id/feedback" element={<Feedback />} />
             </Routes>
         </Router>
     );
