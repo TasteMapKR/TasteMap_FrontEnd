@@ -1,8 +1,8 @@
-// Main.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import CourseCard from '../component/CourseCard';
+import CourseCard from '../../component/CourseCard';
 import { useNavigate } from 'react-router-dom';
+import './Main.css'; // Import the CSS file
 
 const API_BASE_URL = "http://localhost:8080";
 
@@ -73,7 +73,7 @@ const Main = () => {
     };
 
     return (
-        <div>
+        <div className="container">
             <h1>카테고리별 코스</h1>
             <button
                 title='생성하기'
@@ -93,9 +93,9 @@ const Main = () => {
             </label>
 
             {loading && <p>로딩 중...</p>}
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {error && <p className="error">{error}</p>}
 
-            <div style={styles.courseList}>
+            <div className="courseList">
                 {courses.length > 0 ? (
                     courses.map(course => (
                         <CourseCard key={course.id} course={course} />
@@ -105,7 +105,7 @@ const Main = () => {
                 )}
             </div>
 
-            <div>
+            <div className="pagination">
                 <button
                     onClick={() => handlePageChange(page - 1)}
                     disabled={page === 1 || loading}
@@ -122,14 +122,6 @@ const Main = () => {
             </div>
         </div>
     );
-};
-
-const styles = {
-    courseList: {
-        display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: 'center',
-    }
 };
 
 export default Main;

@@ -1,10 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './mono/page/Login';
-import Main from './mono/page/Main';
+import Main from './mono/page/main/Main';
 import RedirectHandler from './mono/page/RedirectHandler'; 
-import Create from './mono/page/Create';
-import Course from './mono/page/Course';
+import Create from './mono/page/create/Create';
+import Course from './mono/page/course/Course';
 import Update from './mono/page/Update';
 import Feedback from './mono/page/Feedback';
 const App = () => {
