@@ -1,0 +1,66 @@
+/* General container for the login */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f5f0ff; /* Light purple background */
+}
+
+/* Style for the login box */
+.login-box {
+    background-color: #ece4ff; /* Slightly darker shade of purple */
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 300px;
+}
+
+/* Logo styling */
+.login-logo {
+    width: 80px;
+    margin-bottom: 30px;
+}
+
+/* Button styling for Kakao */
+.Naver-button {
+    background-color: #26fe00; /* Kakao's yellow color */
+    color: black;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+}
+
+/* Button styling for Google */
+.google-button {
+    background-color: white;
+    color: #757575; /* Slightly dark text */
+    font-weight: bold;
+    padding: 10px 20px;
+    border: 1px solid #d3d3d3;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+}
+
+/* Add hover effects for both buttons */
+.Naver-button:hover {
+    background-color: #3fb41e; /* Darker yellow */
+}
+
+.google-button:hover {
+    background-color: #f7f7f7;
+}

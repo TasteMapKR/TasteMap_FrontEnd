@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { Pie } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 const Feedback = () => {
   const { id } = useParams();
@@ -80,14 +84,14 @@ const Feedback = () => {
     try {
       const token = localStorage.getItem('Access');
 
-      console.log('Deleting feedback with ID:', id); // 디버깅용
+      console.log('Deleting feedback with ID:', id);
       const response = await axios.delete(`http://localhost:8080/api/feedback/${id}`, {
         headers: {
           'access': token,
         },
       });
 
-      console.log('Delete response:', response); // 디버깅용
+      console.log('Delete response:', response);
 
       if (response.status === 204) { // No Content
         setMyFeedback(null);
@@ -102,11 +106,38 @@ const Feedback = () => {
     }
   };
 
+  const renderPieChart = () => {
+    if (!feedbackData || (feedbackData.positive === 0 && feedbackData.negative === 0)) {
+      return <p>피드백이 없습니다.</p>;
+    }
+
+    const data = {
+      labels: ['긍정적', '부정적'],
+      datasets: [
+        {
+          label: 'Feedback',
+          data: [feedbackData.positive, feedbackData.negative],
+          backgroundColor: ['#36A2EB', '#FF6384'],
+          hoverBackgroundColor: ['#36A2EB', '#FF6384'],
+        },
+      ],
+    };
+
+    return (
+      <div className="pie-chart-container">
+        <h3>피드백 비율</h3>
+        <Pie data={data} />
+      </div>
+    );
+  };
+
   if (error) return <div>{error}</div>;
 
   return (
     <div className="container mt-5">
       <h1>Feedback for Course {id}</h1>
+
+      {renderPieChart()}
 
       {myFeedback ? (
         <div className="my-feedback mt-4">

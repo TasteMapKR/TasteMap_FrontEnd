@@ -12,7 +12,7 @@ const Main = () => {
         { value: 'MEAL', displayName: '식사' },
         { value: 'MIXED', displayName: '혼합' }
     ];
-    
+
     const navigate = useNavigate();
     const [selectedCategory, setSelectedCategory] = useState(categories[0].value);
     const [courses, setCourses] = useState([]);
@@ -21,6 +21,7 @@ const Main = () => {
     const [totalPages, setTotalPages] = useState(0);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [hasToken, setHasToken] = useState(false); // State to manage token presence
 
     const fetchCoursesByCategory = async (selectedPage = 1) => {
         setLoading(true);
@@ -28,6 +29,12 @@ const Main = () => {
 
         try {
             const accessToken = localStorage.getItem('Access'); // Access 토큰을 로컬 스토리지에서 가져옴
+            if (!accessToken) {
+                setError("Access token is missing. Please log in again.");
+                return;
+            }
+
+            setHasToken(true); // Set token presence
 
             const response = await axios.get(`${API_BASE_URL}/api/course/category`, {
                 params: {
@@ -47,7 +54,8 @@ const Main = () => {
         } catch (error) {
             if (error.response && error.response.status === 401) {
                 // Unauthorized, 로그인 필요 메시지 표시
-                setError("Access token is invalid or expired. Please log in again.");
+                setError("로그인이 필요합니다.");
+                setHasToken(false); // No valid token
             } else {
                 console.error("Error fetching courses:", error.response ? error.response.data : error.message);
                 setError("Failed to fetch courses.");
@@ -58,12 +66,7 @@ const Main = () => {
     };
 
     useEffect(() => {
-        const token = localStorage.getItem('Access');
-        if (token) {
-            fetchCoursesByCategory(page);
-        } else {
-            setError("Access token is missing. Please log in again.");
-        }
+        fetchCoursesByCategory(page);
     }, [selectedCategory, page]);
 
     const handlePageChange = (newPage) => {
@@ -75,12 +78,14 @@ const Main = () => {
     return (
         <div className="container">
             <h1>카테고리별 코스</h1>
-            <button
-                title='생성하기'
-                onClick={() => navigate('/create')}
-            >
-                생성하기
-            </button>
+            {hasToken && (
+                <button
+                    title='생성하기'
+                    onClick={() => navigate('/create')}
+                >
+                    생성하기
+                </button>
+            )}
             <label>
                 카테고리 선택:
                 <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>

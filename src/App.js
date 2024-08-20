@@ -1,15 +1,19 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Login from './mono/page/Login';
+import Login from './mono/page/login/Login';
 import Main from './mono/page/main/Main';
 import RedirectHandler from './mono/page/RedirectHandler'; 
 import Create from './mono/page/create/Create';
 import Course from './mono/page/course/Course';
 import Update from './mono/page/Update';
 import Feedback from './mono/page/Feedback';
+import Navber from './mono/component/navber/Navber';
+
 const App = () => {
     return (
         <Router>
+            <Navber /> {/* 네비바를 포함 */}
+            <div style={{ paddingTop: '60px' }}>
             <Routes>
                 <Route path="/login" element={<Login />} />
                 <Route path="/redirect" element={<RedirectHandler />} />
@@ -19,6 +23,7 @@ const App = () => {
                 <Route path="/update/:id" element={<Update />} />
                 <Route path="/course/:id/feedback" element={<Feedback />} />
             </Routes>
+            </div>
         </Router>
     );
 };

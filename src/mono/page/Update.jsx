@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import '../page/create/Create.css'; // CSS 파일을 import
 
 const categories = [
     { value: 'DESSERT', displayName: '디저트' },
@@ -26,7 +27,6 @@ const Update = () => {
     const [rootImages, setRootImages] = useState([]);
     const [places, setPlaces] = useState(null);
 
-    // Fetch existing course data
     useEffect(() => {
         const fetchCourseData = async () => {
             try {
@@ -48,7 +48,6 @@ const Update = () => {
         fetchCourseData();
     }, [id, setValue]);
 
-    // Load Kakao Maps API
     useEffect(() => {
         const script = document.createElement('script');
         script.src = "https://dapi.kakao.com/v2/maps/sdk.js?appkey=954c56e411af6cf22c15660906e30af8&libraries=services";
@@ -61,7 +60,6 @@ const Update = () => {
         document.body.appendChild(script);
     }, []);
 
-    // Address search function
     const searchAddress = (index) => {
         const address = prompt("주소를 입력해주세요.");
         if (address && places) {
@@ -76,7 +74,6 @@ const Update = () => {
         }
     };
 
-    // Handle image changes
     const onCourseImageChange = (e) => setCourseImage(e.target.files[0]);
 
     const onRootImageChange = (index) => (e) => {
@@ -88,7 +85,6 @@ const Update = () => {
         });
     };
 
-    // Handle form submission
     const onSubmit = async (data) => {
         const formData = new FormData();
 
@@ -128,17 +124,17 @@ const Update = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
-            {errors.global && <p style={{ color: 'red' }}>{errors.global.message}</p>}
+        <form className="container" onSubmit={handleSubmit(onSubmit)}>
+            {errors.global && <p className="error">{errors.global.message}</p>}
             <div>
                 <label>코스 제목</label>
-                <input {...register('title', { required: "코스 제목은 필수 항목입니다." })} />
-                {errors.title && <p style={{ color: 'red' }}>{errors.title.message}</p>}
+                <input type="text" {...register('title', { required: "코스 제목은 필수 항목입니다." })} />
+                {errors.title && <p className="error">{errors.title.message}</p>}
             </div>
             <div>
                 <label>코스 내용</label>
                 <textarea {...register('content', { required: "코스 내용은 필수 항목입니다." })} />
-                {errors.content && <p style={{ color: 'red' }}>{errors.content.message}</p>}
+                {errors.content && <p className="error">{errors.content.message}</p>}
             </div>
             <div>
                 <label>카테고리</label>
@@ -150,7 +146,7 @@ const Update = () => {
                         </option>
                     ))}
                 </select>
-                {errors.category && <p style={{ color: 'red' }}>{errors.category.message}</p>}
+                {errors.category && <p className="error">{errors.category.message}</p>}
             </div>
             <div>
                 <label>코스 이미지</label>
@@ -167,8 +163,8 @@ const Update = () => {
                         render={({ field }) => (
                             <div>
                                 <label>루트 제목</label>
-                                <input {...field} />
-                                {errors.roots?.[index]?.title && <p style={{ color: 'red' }}>{errors.roots[index].title.message}</p>}
+                                <input type="text" {...field} />
+                                {errors.roots?.[index]?.title && <p className="error">{errors.roots[index].title.message}</p>}
                             </div>
                         )}
                     />
@@ -180,7 +176,7 @@ const Update = () => {
                             <div>
                                 <label>루트 내용</label>
                                 <textarea {...field} />
-                                {errors.roots?.[index]?.content && <p style={{ color: 'red' }}>{errors.roots[index].content.message}</p>}
+                                {errors.roots?.[index]?.content && <p className="error">{errors.roots[index].content.message}</p>}
                             </div>
                         )}
                     />
@@ -191,9 +187,9 @@ const Update = () => {
                         render={({ field }) => (
                             <div>
                                 <label>루트 주소</label>
-                                <input {...field} readOnly /> {/* 읽기 전용으로 설정 */}
+                                <input type="text" {...field} readOnly />
                                 <button type="button" onClick={() => searchAddress(index)}>주소 검색</button>
-                                {errors.roots?.[index]?.address && <p style={{ color: 'red' }}>{errors.roots[index].address.message}</p>}
+                                {errors.roots?.[index]?.address && <p className="error">{errors.roots[index].address.message}</p>}
                             </div>
                         )}
                     />
