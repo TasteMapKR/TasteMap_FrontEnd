@@ -6,7 +6,7 @@ import RedirectHandler from './mono/page/RedirectHandler';
 import Create from './mono/page/create/Create';
 import Course from './mono/page/course/Course';
 import Update from './mono/page/Update';
-import Feedback from './mono/page/Feedback';
+import Feedback from './mono/page/feedback/Feedback';
 import Navber from './mono/component/navber/Navber';
 
 const App = () => {

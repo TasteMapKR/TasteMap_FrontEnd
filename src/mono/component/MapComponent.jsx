@@ -15,7 +15,8 @@ const MapComponent = ({ addressList, focusedIndex }) => {
             const container = document.getElementById('map');
             const options = {
                 center: new kakao.maps.LatLng(33.450701, 126.570667),
-                level: 3
+                level: 3,
+                disableDefaultUI: true, // 기본 UI 비활성화
             };
             const map = new kakao.maps.Map(container, options);
             const geocoder = new kakao.maps.services.Geocoder();
@@ -77,6 +78,11 @@ const MapComponent = ({ addressList, focusedIndex }) => {
                 });
 
                 map.setBounds(bounds);
+
+                // Disable user interaction
+                map.setDraggable(false); // 지도를 드래그할 수 없게 함
+                map.setZoomable(false); // 줌 조절할 수 없게 함
+
                 setMarkers(newMarkers);
                 setPolylines(newPolylines);
             });
@@ -90,7 +96,7 @@ const MapComponent = ({ addressList, focusedIndex }) => {
     }, [addressList, focusedIndex]);
 
     return (
-        <div id="map" style={{ width: '100%', height: '500px' }}></div>
+        <div id="map" style={{ width: '50%', height: '400px' }}></div>
     );
 };
 

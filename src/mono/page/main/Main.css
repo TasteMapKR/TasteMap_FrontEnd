@@ -22,7 +22,12 @@ button {
     margin-right: 10px;
     font-size: 1em;
 }
-
+.pie-chart-container {
+    width: 300px; /* 원하는 너비로 조절 */
+    height: 300px; /* 원하는 높이로 조절 */
+    position: relative; /* 차트가 지정된 크기를 유지하게 함 */
+  }
+  
 button:hover {
     background-color: #681cae;
 }

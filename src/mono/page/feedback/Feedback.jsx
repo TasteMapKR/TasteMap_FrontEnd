@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import './Feedback.css';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -15,25 +16,26 @@ const Feedback = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchFeedbackData = async () => {
-      try {
-        const token = localStorage.getItem('Access');
-        const response = await axios.get(`http://localhost:8080/api/feedback/${id}`, {
-          headers: { 'access': token },
-        });
-        setFeedbackData(response.data.data);
-        setMyFeedback(response.data.data.myFeedbackResponseDTO);
-        if (response.data.data.myFeedbackResponseDTO) {
-          setNewFeedback(response.data.data.myFeedbackResponseDTO.content);
-          setFeedbackStatus(response.data.data.myFeedbackResponseDTO.status);
-        }
-      } catch (error) {
-        setError('Failed to fetch feedback data.');
-        console.error('Failed to fetch feedback data:', error);
+  // Fetch feedback data function
+  const fetchFeedbackData = async () => {
+    try {
+      const token = localStorage.getItem('Access');
+      const response = await axios.get(`http://localhost:8080/api/feedback/${id}`, {
+        headers: { 'access': token },
+      });
+      setFeedbackData(response.data.data);
+      setMyFeedback(response.data.data.myFeedbackResponseDTO);
+      if (response.data.data.myFeedbackResponseDTO) {
+        setNewFeedback(response.data.data.myFeedbackResponseDTO.content);
+        setFeedbackStatus(response.data.data.myFeedbackResponseDTO.status);
       }
-    };
+    } catch (error) {
+      setError('피드백 데이터를 가져오는 데 실패했습니다.');
+      console.error('피드백 데이터를 가져오는 데 실패했습니다:', error);
+    }
+  };
 
+  useEffect(() => {
     fetchFeedbackData();
   }, [id]);
 
@@ -50,12 +52,11 @@ const Feedback = () => {
         },
       });
 
-      setMyFeedback(feedback);
-      setNewFeedback('');
-      setIsEditing(false);
+      // Refresh data after submission
+      fetchFeedbackData();
     } catch (error) {
-      setError('Failed to submit feedback.');
-      console.error('Failed to submit feedback:', error);
+      setError('피드백 제출에 실패했습니다.');
+      console.error('피드백 제출에 실패했습니다:', error);
     }
   };
 
@@ -72,11 +73,11 @@ const Feedback = () => {
         },
       });
 
-      setMyFeedback(feedback);
-      setIsEditing(false);
+      // Refresh data after editing
+      fetchFeedbackData();
     } catch (error) {
-      setError('Failed to edit feedback.');
-      console.error('Failed to edit feedback:', error);
+      setError('피드백 수정에 실패했습니다.');
+      console.error('피드백 수정에 실패했습니다:', error);
     }
   };
 
@@ -84,25 +85,21 @@ const Feedback = () => {
     try {
       const token = localStorage.getItem('Access');
 
-      console.log('Deleting feedback with ID:', id);
       const response = await axios.delete(`http://localhost:8080/api/feedback/${id}`, {
         headers: {
           'access': token,
         },
       });
 
-      console.log('Delete response:', response);
-
       if (response.status === 204) { // No Content
-        setMyFeedback(null);
-        setNewFeedback('');
-        setFeedbackStatus(true);
+        // Refresh data after deletion
+        fetchFeedbackData();
       } else {
-        setError('Unexpected response from server.');
+        setError('서버로부터의 응답이 예상과 다릅니다.');
       }
     } catch (error) {
-      setError('Failed to delete feedback.');
-      console.error('Failed to delete feedback:', error.response ? error.response.data : error.message);
+      setError('피드백 삭제에 실패했습니다.');
+      console.error('피드백 삭제에 실패했습니다:', error.response ? error.response.data : error.message);
     }
   };
 
@@ -115,7 +112,7 @@ const Feedback = () => {
       labels: ['긍정적', '부정적'],
       datasets: [
         {
-          label: 'Feedback',
+          label: '피드백',
           data: [feedbackData.positive, feedbackData.negative],
           backgroundColor: ['#36A2EB', '#FF6384'],
           hoverBackgroundColor: ['#36A2EB', '#FF6384'],
@@ -123,10 +120,36 @@ const Feedback = () => {
       ],
     };
 
+    const options = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'top',
+        },
+        tooltip: {
+          callbacks: {
+            label: function(tooltipItem) {
+              return tooltipItem.label + ': ' + tooltipItem.raw;
+            },
+          },
+        },
+      },
+    };
+
     return (
-      <div className="pie-chart-container">
-        <h3>피드백 비율</h3>
-        <Pie data={data} />
+      <div className="pie-chart-stats-container">
+        <div className="pie-chart-box">
+          <h3>피드백 비율</h3>
+          <div className="pie-chart">
+            <Pie data={data} options={options} />
+          </div>
+        </div>
+        <div className="feedback-stats">
+          <h4>피드백 통계</h4>
+          <p className="positive">긍정적: {feedbackData.positive}</p>
+          <p className="negative">부정적: {feedbackData.negative}</p>
+        </div>
       </div>
     );
   };
@@ -135,10 +158,7 @@ const Feedback = () => {
 
   return (
     <div className="container mt-5">
-      <h1>Feedback for Course {id}</h1>
-
       {renderPieChart()}
-
       {myFeedback ? (
         <div className="my-feedback mt-4">
           <h3>내 피드백</h3>
@@ -228,12 +248,11 @@ const Feedback = () => {
                 {feedback.profile_image ? (
                   <img
                     src={feedback.profile_image}
-                    alt={`${feedback.name}'s profile`}
+                    alt={`${feedback.name}의 프로필`}
                     className="profile-image me-3"
-                    style={{ width: '50px', height: '50px', borderRadius: '50%' }}
                   />
                 ) : (
-                  <div className="profile-image me-3" style={{ width: '50px', height: '50px', borderRadius: '50%', backgroundColor: '#ddd' }}></div>
+                  <div className="profile-image me-3"></div>
                 )}
                 <div>
                   <p><strong>{feedback.name}</strong></p>

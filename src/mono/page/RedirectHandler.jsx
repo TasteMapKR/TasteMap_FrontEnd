@@ -15,10 +15,11 @@ const RedirectHandler = () => {
             });
 
             const newAccessToken = response.headers['access']; // 서버에서 Access 토큰을 헤더에서 추출
-
-            if (newAccessToken) {
+            const { name } = response.data; // 서버에서 이름을 본문에서 추출
+            
+            if (newAccessToken && name) {
                 localStorage.setItem('Access', newAccessToken); // 로컬 스토리지에 저장
-                console.log("New Access Token:", newAccessToken);
+                localStorage.setItem("Name", name);
                 navigate('/'); 
             } else {
                 console.error("Failed to reissue Access token. No token received.");

@@ -16,50 +16,32 @@ const Main = () => {
     const navigate = useNavigate();
     const [selectedCategory, setSelectedCategory] = useState(categories[0].value);
     const [courses, setCourses] = useState([]);
-    const [page, setPage] = useState(1); // 페이지 1부터 시작하도록 수정
+    const [page, setPage] = useState(1); // Start with page 1
     const [size, setSize] = useState(4);
     const [totalPages, setTotalPages] = useState(0);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [hasToken, setHasToken] = useState(false); // State to manage token presence
+    const [isLoggedIn, setIsLoggedIn] = useState(false); // State to manage login status
 
     const fetchCoursesByCategory = async (selectedPage = 1) => {
         setLoading(true);
         setError(null);
 
         try {
-            const accessToken = localStorage.getItem('Access'); // Access 토큰을 로컬 스토리지에서 가져옴
-            if (!accessToken) {
-                setError("Access token is missing. Please log in again.");
-                return;
-            }
-
-            setHasToken(true); // Set token presence
-
             const response = await axios.get(`${API_BASE_URL}/api/course/category`, {
                 params: {
                     category: selectedCategory,
-                    page: selectedPage - 1, // 페이지 요청을 0부터 시작하도록 수정
+                    page: selectedPage - 1,
                     size: size
-                },
-                headers: {
-                    'access': `${accessToken}` // Authorization 헤더에 Access Token 포함
                 }
             });
 
-            // 응답 데이터 구조 확인 및 courses 상태 업데이트
             const { content, totalPages } = response.data.data;
             setCourses(content);
             setTotalPages(totalPages);
         } catch (error) {
-            if (error.response && error.response.status === 401) {
-                // Unauthorized, 로그인 필요 메시지 표시
-                setError("로그인이 필요합니다.");
-                setHasToken(false); // No valid token
-            } else {
-                console.error("Error fetching courses:", error.response ? error.response.data : error.message);
-                setError("Failed to fetch courses.");
-            }
+            console.error("Error fetching courses:", error.response ? error.response.data : error.message);
+            setError("Failed to fetch courses.");
         } finally {
             setLoading(false);
         }
@@ -69,6 +51,15 @@ const Main = () => {
         fetchCoursesByCategory(page);
     }, [selectedCategory, page]);
 
+    useEffect(() => {
+        const token = localStorage.getItem('Access');
+        if (token) {
+            setIsLoggedIn(true);
+        } else {
+            setIsLoggedIn(false);
+        }
+    }, []); 
+
     const handlePageChange = (newPage) => {
         if (newPage >= 1 && newPage <= totalPages) {
             setPage(newPage);
@@ -77,8 +68,7 @@ const Main = () => {
 
     return (
         <div className="container">
-            <h1>카테고리별 코스</h1>
-            {hasToken && (
+            {isLoggedIn && (
                 <button
                     title='생성하기'
                     onClick={() => navigate('/create')}
@@ -86,6 +76,7 @@ const Main = () => {
                     생성하기
                 </button>
             )}
+            
             <label>
                 카테고리 선택:
                 <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>

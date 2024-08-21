@@ -13,12 +13,15 @@ const Course = () => {
     const [error, setError] = useState(null);
     const [focusedIndex, setFocusedIndex] = useState(0);
 
+    // 로컬 스토리지에서 Name 가져오기
+    const localStorageName = localStorage.getItem('Name');
+
     useEffect(() => {
         const token = localStorage.getItem('Access');
-        
+
         axios.get(`http://localhost:8080/api/course/${id}`, {
             headers: {
-                'access': `${token}`
+                Authorization: `Bearer ${token}` // Access 토큰을 헤더에 포함
             }
         })
         .then(response => {
@@ -41,38 +44,48 @@ const Course = () => {
     const profileImageUrl = course?.profile_image;
     const rootImageUrls = roots.map((_, index) => `https://quddaztestbucket.s3.ap-northeast-2.amazonaws.com/root/${id}/${index + 1}`);
 
+    // 수정 버튼 표시 여부 결정
+    const showEditButton = localStorageName === course?.name;
+
     return (
         <div className="course-container">
             <div className="course-header">
-                <img src={courseImageUrl} alt="코스 이미지" className="course-image" />
-                <div className="course-info">
-                    <h1>{course?.title}</h1>
-                    <div className="course-category">{course?.category}</div>
-                    <img src={profileImageUrl} alt="프로필 이미지" className="profile-image" />
-                    <p className="course-name">{course?.name}</p>
+                <div className="course-image-container">
+                    <img src={courseImageUrl} alt="코스 이미지" className="course-image" />
+                    <div className="overlay">
+                        <div className="course-info">
+                            <h1>
+                                {course?.title}
+                                <button className="review-button" onClick={() => navigate(`/course/${id}/feedback`)}>리뷰</button>
+                            </h1>
+                            <div className="course-category">#{course?.category}</div>
+                            <div className="profile-info">
+                                <img src={profileImageUrl} alt="프로필 이미지" className="profile-image" />
+                                <p className="course-name">{course?.name}</p>
+                            </div>
+                            {showEditButton && (
+                                <button className="review-button" onClick={() => navigate(`/update/${id}`)}>수정</button>
+                            )}
+                        </div>
+                    </div>
                 </div>
-                <div className="course-review">
-                <button className="review-button" onClick={() => navigate(`/update/${id}`)}>수정</button>
-                    <button className="review-button" onClick={() => navigate(`/course/${id}/feedback`)}>리뷰</button>
-                </div>
-            </div>
-
-            <div className="root-navigation">
-                {roots.map((_, index) => (
-                    <button
-                        key={index}
-                        onClick={() => setFocusedIndex(index)}
-                        className={`root-tab ${focusedIndex === index ? 'active' : ''}`}
-                    >
-                        루트{index + 1}
-                    </button>
-                ))}
             </div>
 
             <div className="roots-section">
                 <div className="root-details">
+                    <div className="root-navigation">
+                        {roots.map((_, index) => (
+                            <button
+                                key={index}
+                                onClick={() => setFocusedIndex(index)}
+                                className={`root-tab ${focusedIndex === index ? 'active' : ''}`}
+                            >
+                                루트{index + 1}
+                            </button>
+                        ))}
+                    </div>
                     <img src={rootImageUrls[focusedIndex]} alt={`루트 ${focusedIndex + 1}`} className="root-image" />
-                    <h3>{roots[focusedIndex]?.title}</h3>
+                    <h3>루트.{focusedIndex + 1} {roots[focusedIndex]?.title}</h3>
                     <p>{roots[focusedIndex]?.content}</p>
                 </div>
                 <MapComponent addressList={roots.map(root => root.address)} focusedIndex={focusedIndex} />
