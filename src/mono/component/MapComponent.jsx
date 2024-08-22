@@ -16,7 +16,7 @@ const MapComponent = ({ addressList, focusedIndex }) => {
             const options = {
                 center: new kakao.maps.LatLng(33.450701, 126.570667),
                 level: 3,
-                disableDefaultUI: true, // 기본 UI 비활성화
+                disableDefaultUI: true,
             };
             const map = new kakao.maps.Map(container, options);
             const geocoder = new kakao.maps.services.Geocoder();
@@ -24,7 +24,6 @@ const MapComponent = ({ addressList, focusedIndex }) => {
             const newMarkers = [];
             const newPolylines = [];
 
-            // Convert addressList to LatLng coordinates
             Promise.all(
                 addressList.map((address) =>
                     new Promise((resolve) => {
@@ -40,16 +39,15 @@ const MapComponent = ({ addressList, focusedIndex }) => {
                     })
                 )
             ).then((results) => {
-                // Create markers
                 results.forEach((latLng, index) => {
                     if (latLng) {
                         const isFocused = index === focusedIndex;
                         const markerImage = new kakao.maps.MarkerImage(
                             isFocused
-                                ? '/marker2.png'  // Focused marker image
-                                : '/marker.png',       // Default marker image
+                                ? '/marker2.png'
+                                : '/marker.png',     
                             new kakao.maps.Size(64, 69),
-                            { offset: new kakao.maps.Point(32, 69) }  // Center the marker image
+                            { offset: new kakao.maps.Point(32, 69) }
                         );
 
                         const marker = new kakao.maps.Marker({
@@ -62,12 +60,11 @@ const MapComponent = ({ addressList, focusedIndex }) => {
                         newMarkers.push(marker);
                         bounds.extend(latLng);
 
-                        // Create a polyline if not the first marker
                         if (index > 0 && results[index - 1]) {
                             const polyline = new kakao.maps.Polyline({
                                 path: [results[index - 1], latLng],
                                 strokeWeight: 5,
-                                strokeColor: '#ff9ef770', // Line color (purple)
+                                strokeColor: '#ff9ef770', 
                                 strokeOpacity: 0.7,
                                 strokeStyle: 'solid'
                             });
@@ -79,10 +76,8 @@ const MapComponent = ({ addressList, focusedIndex }) => {
 
                 map.setBounds(bounds);
 
-                // Disable user interaction
-                map.setDraggable(false); // 지도를 드래그할 수 없게 함
-                map.setZoomable(false); // 줌 조절할 수 없게 함
-
+                map.setDraggable(false); 
+                map.setZoomable(false); 
                 setMarkers(newMarkers);
                 setPolylines(newPolylines);
             });

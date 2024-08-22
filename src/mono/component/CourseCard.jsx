@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import { Link } from 'react-router-dom'; 
 
 const categories = [
     { value: 'DESSERT', displayName: '디저트' },
@@ -42,22 +42,22 @@ const CourseCard = ({ course }) => {
 
 const styles = {
     cardLink: {
-        textDecoration: 'none',  // Remove underline from link
-        color: 'inherit',        // Inherit color from parent element
+        textDecoration: 'none',
+        color: 'inherit',      
     },
     card: {
-        border: '2px solid #D6C9FF',  // Light purple border
+        border: '2px solid #D6C9FF', 
         borderRadius: '12px',
         padding: '16px',
         margin: '16px',
         maxWidth: '300px',
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-        backgroundColor: '#FFFFFF',  // White background
+        backgroundColor: '#FFFFFF', 
     },
     mainImageContainer: {
         position: 'relative',
-        width: '250px',  // Fixed width for the image container
-        height: '150px',  // Fixed height for the image container
+        width: '250px', 
+        height: '150px',  
         overflow: 'hidden',
         borderRadius: '12px',
         marginBottom: '12px',
@@ -65,14 +65,14 @@ const styles = {
     mainImage: {
         width: '100%',
         height: '100%',
-        objectFit: 'cover',  // Ensures the image covers the container
+        objectFit: 'cover',  
     },
     imageDivider: {
         position: 'absolute',
         bottom: '0',
         left: '0',
         width: '100%',
-        borderTop: '2px solid #D6C9FF',  // Light purple line
+        borderTop: '2px solid #D6C9FF',  
         margin: '0',
     },
     content: {

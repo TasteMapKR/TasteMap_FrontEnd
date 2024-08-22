@@ -97,10 +97,9 @@ const Create = () => {
         formData.append('courseImage', courseImage);
         formData.append('roots', new Blob([JSON.stringify(data.roots)], { type: "application/json" }));
 
-        // Append root images as a list
         rootImages.forEach((image) => {
             if (image) {
-                formData.append('rootImages', image); // Append each image with the key 'rootImages'
+                formData.append('rootImages', image);
             }
         });
 
@@ -117,8 +116,8 @@ const Create = () => {
             setCourseImage(null);
             setRootImages([]);
             setTimeout(() => {
-                navigate('/'); // 성공 후 리디렉션
-            }, 2000); // 2초 후 리디렉션
+                navigate('/'); 
+            }, 2000); 
         } catch (error) {
             console.error('코스 생성 중 오류 발생:', error);
             setMessage({ text: '코스 생성에 실패했습니다.', type: 'error' });

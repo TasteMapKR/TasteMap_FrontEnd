@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
-import '../page/create/Create.css'; // CSS 파일을 import
+import '../page/create/Create.css';
 
 const categories = [
     { value: 'DESSERT', displayName: '디저트' },

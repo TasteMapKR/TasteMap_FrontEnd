@@ -13,7 +13,7 @@ const Course = () => {
     const [error, setError] = useState(null);
     const [focusedIndex, setFocusedIndex] = useState(0);
 
-    // 로컬 스토리지에서 Name 가져오기
+
     const localStorageName = localStorage.getItem('Name');
 
     useEffect(() => {
@@ -21,7 +21,7 @@ const Course = () => {
 
         axios.get(`http://localhost:8080/api/course/${id}`, {
             headers: {
-                Authorization: `Bearer ${token}` // Access 토큰을 헤더에 포함
+                Authorization: `Bearer ${token}`
             }
         })
         .then(response => {
@@ -86,6 +86,7 @@ const Course = () => {
                     </div>
                     <img src={rootImageUrls[focusedIndex]} alt={`루트 ${focusedIndex + 1}`} className="root-image" />
                     <h3>루트.{focusedIndex + 1} {roots[focusedIndex]?.title}</h3>
+                    <p>{roots[focusedIndex]?.address}</p>
                     <p>{roots[focusedIndex]?.content}</p>
                 </div>
                 <MapComponent addressList={roots.map(root => root.address)} focusedIndex={focusedIndex} />

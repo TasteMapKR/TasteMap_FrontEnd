@@ -7,18 +7,18 @@ const API_BASE_URL = "http://localhost:8080";
 const RedirectHandler = () => {
     const navigate = useNavigate(); 
 
-    // Access Token을 요청하고 로컬 스토리지에 저장
     const fetchAccessToken = async () => {
         try {
             const response = await axios.post(`${API_BASE_URL}/refresh`, {}, {
-                withCredentials: true // 쿠키를 포함하여 요청
+                withCredentials: true
             });
 
-            const newAccessToken = response.headers['access']; // 서버에서 Access 토큰을 헤더에서 추출
-            const { name } = response.data; // 서버에서 이름을 본문에서 추출
+            const newAccessToken = response.headers['access']; 
+            const { name } = response.data;
             
             if (newAccessToken && name) {
-                localStorage.setItem('Access', newAccessToken); // 로컬 스토리지에 저장
+                localStorage.setItem('Access', newAccessToken); 
+                
                 localStorage.setItem("Name", name);
                 navigate('/'); 
             } else {

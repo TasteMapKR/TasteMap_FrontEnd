@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-
+import './App.css';
 // Create the root and render the App component without React.StrictMode
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

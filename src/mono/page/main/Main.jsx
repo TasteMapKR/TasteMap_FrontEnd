@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import CourseCard from '../../component/CourseCard';
 import { useNavigate } from 'react-router-dom';
-import './Main.css'; // Import the CSS file
+import './Main.css'; 
+
 
 const API_BASE_URL = "http://localhost:8080";
 
@@ -16,12 +17,12 @@ const Main = () => {
     const navigate = useNavigate();
     const [selectedCategory, setSelectedCategory] = useState(categories[0].value);
     const [courses, setCourses] = useState([]);
-    const [page, setPage] = useState(1); // Start with page 1
+    const [page, setPage] = useState(1);
     const [size, setSize] = useState(4);
     const [totalPages, setTotalPages] = useState(0);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [isLoggedIn, setIsLoggedIn] = useState(false); // State to manage login status
+    const [isLoggedIn, setIsLoggedIn] = useState(false); 
 
     const fetchCoursesByCategory = async (selectedPage = 1) => {
         setLoading(true);
@@ -66,8 +67,8 @@ const Main = () => {
         }
     };
 
-    return (
-        <div className="container">
+    return (<div>
+        <div >
             {isLoggedIn && (
                 <button
                     title='생성하기'
@@ -116,7 +117,7 @@ const Main = () => {
                     다음
                 </button>
             </div>
-        </div>
+        </div></div>
     );
 };
 

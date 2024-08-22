@@ -7,22 +7,22 @@ import Create from './mono/page/create/Create';
 import Course from './mono/page/course/Course';
 import Update from './mono/page/Update';
 import Feedback from './mono/page/feedback/Feedback';
-import Navber from './mono/component/navber/Navber';
+import Navbar from './mono/component/navber/Navber';
 
 const App = () => {
     return (
         <Router>
-            <Navber /> {/* 네비바를 포함 */}
-            <div style={{ paddingTop: '60px' }}>
-            <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route path="/redirect" element={<RedirectHandler />} />
-                <Route path="/" element={<Main />} />
-                <Route path="/create" element={<Create />} />
-                <Route path="/course/:id" element={<Course />} />
-                <Route path="/update/:id" element={<Update />} />
-                <Route path="/course/:id/feedback" element={<Feedback />} />
-            </Routes>
+            <Navbar />
+            <div style={{ paddingTop: '60px', backgroundColor: '#ece4ff' }}> 
+                <Routes>
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/redirect" element={<RedirectHandler />} />
+                    <Route path="/" element={<Main />} />
+                    <Route path="/create" element={<Create />} />
+                    <Route path="/course/:id" element={<Course />} />
+                    <Route path="/update/:id" element={<Update />} />
+                    <Route path="/course/:id/feedback" element={<Feedback />} />
+                </Routes>
             </div>
         </Router>
     );
