@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import CourseCard from '../../component/CourseCard';
 import { useNavigate } from 'react-router-dom';
+import CourseCard from '../../component/CourseCard';
+import { fetchCoursesByCategory, fetchAllCourses } from '../../api/api';
 import './Main.css'; 
-
-
-const API_BASE_URL = "http://localhost:8080";
 
 const Main = () => {
     const categories = [
@@ -18,47 +15,31 @@ const Main = () => {
     const [selectedCategory, setSelectedCategory] = useState(categories[0].value);
     const [courses, setCourses] = useState([]);
     const [page, setPage] = useState(1);
-    const [size, setSize] = useState(4);
     const [totalPages, setTotalPages] = useState(0);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [isLoggedIn, setIsLoggedIn] = useState(false); 
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    const fetchCoursesByCategory = async (selectedPage = 1) => {
-        setLoading(true);
-        setError(null);
-
+    const loadCourses = async () => {
         try {
-            const response = await axios.get(`${API_BASE_URL}/api/course/category`, {
-                params: {
-                    category: selectedCategory,
-                    page: selectedPage - 1,
-                    size: size
-                }
-            });
-
-            const { content, totalPages } = response.data.data;
-            setCourses(content);
-            setTotalPages(totalPages);
+            let data;
+            if (selectedCategory === 'ALL') {
+                data = await fetchAllCourses(page);
+            } else {
+                data = await fetchCoursesByCategory(selectedCategory, page);
+            }
+            setCourses(data.content);
+            setTotalPages(data.totalPages);
         } catch (error) {
-            console.error("Error fetching courses:", error.response ? error.response.data : error.message);
-            setError("Failed to fetch courses.");
-        } finally {
-            setLoading(false);
+            console.error("Error fetching courses:", error.message);
         }
     };
 
     useEffect(() => {
-        fetchCoursesByCategory(page);
+        loadCourses();
     }, [selectedCategory, page]);
 
     useEffect(() => {
         const token = localStorage.getItem('Access');
-        if (token) {
-            setIsLoggedIn(true);
-        } else {
-            setIsLoggedIn(false);
-        }
+        setIsLoggedIn(!!token);
     }, []); 
 
     const handlePageChange = (newPage) => {
@@ -67,30 +48,46 @@ const Main = () => {
         }
     };
 
-    return (<div>
-        <div >
-            {isLoggedIn && (
-                <button
-                    title='생성하기'
-                    onClick={() => navigate('/create')}
-                >
-                    생성하기
-                </button>
-            )}
-            
-            <label>
-                카테고리 선택:
-                <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
-                    {categories.map(category => (
-                        <option key={category.value} value={category.value}>
-                            {category.displayName}
-                        </option>
-                    ))}
-                </select>
-            </label>
+    const handleFetchAllCourses = () => {
+        setSelectedCategory('ALL'); // 전체 보기
+        setPage(1); // 페이지 리셋
+    };
 
-            {loading && <p>로딩 중...</p>}
-            {error && <p className="error">{error}</p>}
+    return (
+        <div className="container">
+            <div className="action-buttons">
+                {isLoggedIn && (
+                    <button
+                        className="button"
+                        title='생성하기'
+                        onClick={() => navigate('/create')}
+                    >
+                        생성하기
+                    </button>
+                )}
+ 
+            </div>
+            
+            <div className="category-buttons">
+                {categories.map(category => (
+                    <button
+                        key={category.value}
+                        className={`button ${selectedCategory === category.value ? 'active' : ''}`}
+                        onClick={() => {
+                            setSelectedCategory(category.value);
+                            setPage(1); // 페이지 리셋
+                        }}
+                    >
+                        {category.displayName}
+                    </button>
+                ))}
+                <button
+                    className="button"
+                    onClick={handleFetchAllCourses}
+                >
+                    전체
+                </button>
+            </div>
 
             <div className="courseList">
                 {courses.length > 0 ? (
@@ -105,19 +102,19 @@ const Main = () => {
             <div className="pagination">
                 <button
                     onClick={() => handlePageChange(page - 1)}
-                    disabled={page === 1 || loading}
+                    disabled={page === 1}
                 >
                     이전
                 </button>
                 <span> 페이지 {page} / {totalPages} </span>
                 <button
                     onClick={() => handlePageChange(page + 1)}
-                    disabled={page >= totalPages || loading}
+                    disabled={page >= totalPages}
                 >
                     다음
                 </button>
             </div>
-        </div></div>
+        </div>
     );
 };
 

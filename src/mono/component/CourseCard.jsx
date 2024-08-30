@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom'; 
+import { Link } from 'react-router-dom';
+import './CourseCard.css'; // 일반 CSS 파일 임포트
 
 const categories = [
     { value: 'DESSERT', displayName: '디저트' },
@@ -14,100 +15,30 @@ const getCategoryDisplayName = (categoryValue) => {
 
 const CourseCard = ({ course }) => {
     return (
-        <Link to={`/course/${course.id}`} style={styles.cardLink}>
-            <div style={styles.card}>
-                <div style={styles.mainImageContainer}>
+        <Link to={`/course/${course.id}`} className="card-link">
+            <div className="card">
+                <div className="main-image-container">
                     <img 
                         src={`https://quddaztestbucket.s3.ap-northeast-2.amazonaws.com/course/${course.id}`} 
                         alt={course.title} 
-                        style={styles.mainImage} 
+                        className="main-image" 
                     />
-                    <hr style={styles.imageDivider} />
+                    <hr className="image-divider" />
                 </div>
-                <div style={styles.content}>
-                    <h2 style={styles.title}>{course.title}</h2>
-                    <p style={styles.category}>#{getCategoryDisplayName(course.category)}</p>
-                    <p style={styles.description}>{course.description}</p>
-                    <div style={styles.profileContainer}>
+                <div className="content">
+                    <h2 className="title">{course.title}</h2>
+                    <p className="category">#{getCategoryDisplayName(course.category)}</p>
+                    <p className="description">{course.description}</p>
+                    <div className="profile-container">
                         {course.profile_image && (
-                            <img src={course.profile_image} alt={course.name} style={styles.profileImage} />
+                            <img src={course.profile_image} alt={course.name} className="profile-image" />
                         )}
-                        <p style={styles.name}>{course.name}</p>
+                        <p className="name">{course.name}</p>
                     </div>
                 </div>
             </div>
         </Link>
     );
-};
-
-const styles = {
-    cardLink: {
-        textDecoration: 'none',
-        color: 'inherit',      
-    },
-    card: {
-        border: '2px solid #D6C9FF', 
-        borderRadius: '12px',
-        padding: '16px',
-        margin: '16px',
-        maxWidth: '300px',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-        backgroundColor: '#FFFFFF', 
-    },
-    mainImageContainer: {
-        position: 'relative',
-        width: '250px', 
-        height: '150px',  
-        overflow: 'hidden',
-        borderRadius: '12px',
-        marginBottom: '12px',
-    },
-    mainImage: {
-        width: '100%',
-        height: '100%',
-        objectFit: 'cover',  
-    },
-    imageDivider: {
-        position: 'absolute',
-        bottom: '0',
-        left: '0',
-        width: '100%',
-        borderTop: '2px solid #D6C9FF',  
-        margin: '0',
-    },
-    content: {
-        textAlign: 'left',
-    },
-    title: {
-        fontSize: '18px',
-        margin: '8px 0',
-        fontWeight: 'bold',
-    },
-    category: {
-        fontSize: '14px',
-        color: '#666',
-        marginBottom: '8px',
-    },
-    description: {
-        fontSize: '14px',
-        color: '#666',
-        marginBottom: '12px',
-    },
-    profileContainer: {
-        display: 'flex',
-        alignItems: 'center',
-        marginTop: '8px',
-    },
-    profileImage: {
-        width: '40px',
-        height: '40px',
-        borderRadius: '50%',
-        marginRight: '8px',
-    },
-    name: {
-        fontSize: '16px',
-        margin: '0',
-    }
 };
 
 export default CourseCard;

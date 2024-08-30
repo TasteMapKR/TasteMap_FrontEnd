@@ -1,4 +1,5 @@
-.container {
+/* 전체 컨테이너 스타일 */
+.create-container {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
@@ -6,48 +7,77 @@
     border-radius: 8px;
     background-color: #f9f9f9;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
 }
 
-h2 {
+/* 제목 스타일 */
+.create-container h2 {
     margin-top: 0;
     color: #333;
     font-size: 24px;
 }
 
-label {
-    display: block;
-    margin: 15px 0 5px;
+/* 레이블과 입력 필드가 가로로 정렬되도록 설정 */
+.create-container .form-group {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 15px;
+    align-items: center; /* 세로 정렬 */
+}
+
+/* 레이블 스타일 */
+.create-container label {
+    width: 150px;
     font-weight: bold;
     color: #444;
+    margin-right: 15px;
+    line-height: 1.5;
 }
 
-input[type="text"],
-textarea {
-    width: 100%;
+/* 루트 입력 필드 및 텍스트 영역 스타일 */
+.create-container .form-group input[type="text"],
+.create-container .form-group textarea {
+    flex: 2; /* flex 값을 2로 증가시켜 길이를 늘림 */
     padding: 12px;
-    margin-bottom: 12px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-sizing: border-box;
     font-size: 16px;
+    width: 100%; /* 필드가 flex-container의 너비를 차지하게 함 */
+    box-sizing: border-box; /* 패딩 포함 너비 계산 */
+    min-width: 300px; /* 최소 너비를 설정하여 너무 짧아지지 않도록 함 */
 }
 
-input[type="file"] {
+
+/* 루트 주소 입력 필드 스타일 */
+.create-container input.address-input {
+    flex: 3; /* 주소 입력 필드를 더 길게 설정 */
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    width: 100%; /* 필드가 flex-container의 너비를 차지하게 함 */
+    box-sizing: border-box; /* 패딩 포함 너비 계산 */
+    min-width: 300px; /* 최소 너비를 설정하여 너무 짧아지지 않도록 함 */
+}
+/* 파일 입력 스타일 */
+.create-container input[type="file"] {
     margin-bottom: 15px;
     font-size: 16px;
 }
 
-select {
-    width: 100%;
+/* 선택 필드 스타일 */
+.create-container select {
+    flex: 1;
     padding: 12px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-sizing: border-box;
     font-size: 16px;
-    margin-bottom: 12px;
+    width: 100%;
 }
 
-button {
+/* 버튼 스타일 */
+.create-container button {
     background-color: #6a0dad;
     color: white;
     border: none;
@@ -59,50 +89,43 @@ button {
     transition: background-color 0.3s ease;
 }
 
-button:hover {
+.create-container button:hover {
     background-color: #551a8b;
 }
 
-button:disabled {
+.create-container button:disabled {
     background-color: #d6d6d6;
     cursor: not-allowed;
 }
 
-.error {
-    color: red;
-    font-size: 0.875em;
-    margin-top: -8px;
-    margin-bottom: 12px;
-}
-
-.message {
+/* 메시지 스타일 */
+.create-container .message {
     padding: 12px;
     margin-bottom: 20px;
     border-radius: 4px;
     font-size: 16px;
 }
 
-.message.success {
+.create-container .message.success {
     background-color: #d4edda;
     color: #155724;
 }
 
-.message.error {
+.create-container .message.error {
     background-color: #f8d7da;
     color: #721c24;
 }
 
-input.address-input {
-    width: 200%;
-    padding: 12px;
+/* 에러 메시지 스타일 */
+.create-container .error {
+    color: red;
+    font-size: 0.875em;
+    margin-top: -8px;
     margin-bottom: 12px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-    box-sizing: border-box;
 }
 
-button.address-search {
+/* 주소 검색 버튼 스타일 */
+.create-container button.address-search {
     background-color: #007bff;
     color: white;
     padding: 10px 15px;
@@ -111,66 +134,18 @@ button.address-search {
     margin-left: 10px;
 }
 
-button.address-search:hover {
+.create-container button.address-search:hover {
     background-color: #0056b3;
 }
 
-/* 반응형 디자인을 위한 미디어 쿼리 추가 */
-@media screen and (max-width: 768px) {
-    .container {
-        padding: 15px;
-    }
-
-    h2 {
-        font-size: 20px;
-    }
-
-    label {
-        margin: 10px 0 5px;
-        font-size: 14px;
-    }
-
-    input[type="text"],
-    textarea,
-    select {
-        font-size: 14px;
-        padding: 10px;
-    }
-
-    button {
-        font-size: 14px;
-        padding: 10px 20px;
-        margin-right: 5px;
-    }
-
-    button.address-search {
-        font-size: 12px;
-        padding: 8px 12px;
-    }
-
-    .message {
-        font-size: 14px;
-    }
-
-    .error {
-        font-size: 12px;
-    }
+/* 루트 추가 및 삭제 버튼 정렬 */
+.create-container .form-group-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
 }
 
-@media screen and (max-width: 480px) {
-    button {
-        display: block;
-        width: 100%;
-        margin-bottom: 10px;
-    }
-
-    button.address-search {
-        width: 100%;
-        margin: 5px 0;
-    }
-
-    input.address-input {
-        width: calc(100% - 20px);
-        margin-bottom: 10px;
-    }
+/* 각 루트 섹션 간 간격 조정 */
+.create-container .form-group + .form-group {
+    margin-top: 15px;
 }

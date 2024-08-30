@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import PieChart from '../../component/PieChart';
 import FeedbackForm from './FeedbackForm';
 import FeedbackList from './FeedbackList';
 import MyFeedback from './MyFeedback';
+import { fetchFeedbackData, deleteFeedback } from '../../api/api'; // api.js에서 가져오기
 import './Feedback.css';
 
 const Feedback = () => {
@@ -15,38 +15,34 @@ const Feedback = () => {
   const [error, setError] = useState(null);
   const token = localStorage.getItem('Access');
 
-  const fetchFeedbackData = async () => {
+  const handleFetchFeedbackData = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/feedback/${id}`, {
-        headers: { access: token },
-      });
-      setFeedbackData(response.data.data);
-      setMyFeedback(response.data.data.myFeedbackResponseDTO);
+      const data = await fetchFeedbackData(id, token);
+      setFeedbackData(data);
+      setMyFeedback(data.myFeedbackResponseDTO);
     } catch (error) {
-      setError('피드백 데이터를 가져오는 데 실패했습니다.');
+      setError(error.message);
       console.error('피드백 데이터를 가져오는 데 실패했습니다:', error);
     }
   };
 
   const handleFeedbackDelete = async () => {
     try {
-      const response = await axios.delete(`http://localhost:8080/feedback/${id}`, {
-        headers: { access: token },
-      });
+      const status = await deleteFeedback(id, token);
 
-      if (response.status === 204) {
-        fetchFeedbackData();
+      if (status === 204) {
+        handleFetchFeedbackData();
       } else {
         setError('서버로부터의 응답이 예상과 다릅니다.');
       }
     } catch (error) {
-      setError('피드백 삭제에 실패했습니다.');
-      console.error('피드백 삭제에 실패했습니다:', error.response ? error.response.data : error.message);
+      setError(error.message);
+      console.error('피드백 삭제에 실패했습니다:', error);
     }
   };
 
   useEffect(() => {
-    fetchFeedbackData();
+    handleFetchFeedbackData();
   }, [id]);
 
   return (
@@ -64,10 +60,10 @@ const Feedback = () => {
             setIsEditing={setIsEditing}
             handleFeedbackDelete={handleFeedbackDelete}
             id={id}
-            fetchFeedbackData={fetchFeedbackData}
+            fetchFeedbackData={handleFetchFeedbackData}
           />
         ) : (
-          <FeedbackForm id={id} fetchFeedbackData={fetchFeedbackData} />
+          <FeedbackForm id={id} fetchFeedbackData={handleFetchFeedbackData} />
         )
       ) : (
         <p>피드백을 작성하려면 로그인이 필요합니다.</p>

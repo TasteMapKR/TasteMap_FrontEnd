@@ -1,9 +1,11 @@
+/* 전체 컨테이너 스타일 */
 .course-container {
     max-width: 100%;
     margin: 0 auto;
     padding: 20px;
 }
 
+/* 헤더와 이미지 스타일 */
 .course-header {
     position: relative;
     width: 100%;
@@ -16,7 +18,7 @@
 
 .course-image {
     width: 100%;
-    max-height: 400px; /* 세로 크기를 줄임 */
+    max-height: 300px; /* 세로 크기를 줄임 */
     object-fit: cover; /* 이미지 비율 유지 */
     border-radius: 8px;
 }
@@ -39,6 +41,7 @@
     border-radius: 8px;
 }
 
+/* 정보 및 카테고리 스타일 */
 .course-info {
     margin-bottom: 20px;
 }
@@ -54,24 +57,25 @@
 }
 
 .course-info .review-button {
-    background-color: #8a2be2; /* 리뷰 버튼 색상 */
+    background-color: #ece4ff; /* 메인 버튼 색상 */
     justify-content: right;
     padding: 5px 10px;
     border: none;
     border-radius: 5px;
-    color: #fff;
+    color: black; /* 메인 버튼의 텍스트 색상과 일치 */
     cursor: pointer;
 }
 
 .course-category {
     padding: 5px 10px;
-    background-color: #c08bf2;
+    background-color: #ece4ff; /* 메인 버튼 색상 */
     border-radius: 5px;
     display: inline-block;
     margin-bottom: 10px;
-    color: white;
+    color: black; /* 메인 버튼의 텍스트 색상과 일치 */
 }
 
+/* 프로필 및 리뷰 버튼 스타일 */
 .profile-info {
     display: flex;
     align-items: center;
@@ -96,20 +100,25 @@
 
 .review-button {
     padding: 8px 15px;
-    background-color: #8a2be2;
-    color: #fff;
+    background-color: #f0eaff; /* 메인 버튼 색상 */
+    color: black; /* 메인 버튼의 텍스트 색상과 일치 */
     border: none;
     border-radius: 5px;
     cursor: pointer;
     margin: 0 5px;
 }
 
+/* 탭 스타일 */
 .root-navigation {
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
 }
-
+/* 탭 스타일 */
+.root-navigation button{
+    background-color: #f0eaff; /* 메인 버튼 색상 */
+    border: none;
+}
 .root-tab {
     flex: 1;
     padding: 10px;
@@ -120,9 +129,10 @@
 }
 
 .root-tab.active {
-    border-bottom: 3px solid #8a2be2;
+    border-bottom: 3px solid #eae1f4; /* 메인 버튼 색상 */
 }
 
+/* 루트 세션 스타일 */
 .roots-section {
     background-color: white;
     display: flex;

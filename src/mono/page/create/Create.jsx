@@ -1,6 +1,8 @@
+// Create.js
+
 import React, { useState, useEffect } from 'react';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
-import axios from 'axios';
+import { createCourse } from '../../api/api'; // api.js 파일에서 가져오기
 import { useNavigate } from 'react-router-dom';
 import './Create.css'; 
 
@@ -104,13 +106,7 @@ const Create = () => {
         });
 
         try {
-            const accessToken = localStorage.getItem('Access');
-            await axios.post('http://localhost:8080/course', formData, {
-                headers: { 
-                    'Content-Type': 'multipart/form-data',
-                    'access': accessToken
-                }
-            });
+            await createCourse(formData);
             setMessage({ text: '코스가 성공적으로 생성되었습니다!', type: 'success' });
             reset();
             setCourseImage(null);
@@ -119,30 +115,38 @@ const Create = () => {
                 navigate('/'); 
             }, 2000); 
         } catch (error) {
-            console.error('코스 생성 중 오류 발생:', error);
             setMessage({ text: '코스 생성에 실패했습니다.', type: 'error' });
         }
     };
 
+    const handleRemoveLastRoot = () => {
+        if (fields.length > 0) {
+            remove(fields.length - 1);
+            setRootImages(prev => prev.slice(0, -1));
+        }
+    };
+
     return (
-        <div className="container">
+        <div className="create-container">
+            <h3>코스 작성하기</h3>
+            <hr></hr>
             <form onSubmit={handleSubmit(onSubmit)}>
                 {message.text && (
                     <div className={`message ${message.type}`}>
                         {message.text}
                     </div>
                 )}
-                <div>
+                <div className="form-group">
                     <label>코스 제목</label>
                     <input {...register('title', { required: "코스 제목은 필수입니다." })} />
                     {errors.title && <p className="error">{errors.title.message}</p>}
                 </div>
-                <div>
+                <div className="form-group">
                     <label>코스 내용</label>
                     <textarea {...register('content', { required: "코스 내용은 필수입니다." })} />
                     {errors.content && <p className="error">{errors.content.message}</p>}
                 </div>
-                <div>
+                <div className="form-group">
                     <label>카테고리</label>
                     <select {...register('category', { required: "카테고리는 필수입니다." })}>
                         <option value="">카테고리 선택</option>
@@ -154,63 +158,75 @@ const Create = () => {
                     </select>
                     {errors.category && <p className="error">{errors.category.message}</p>}
                 </div>
-                <div>
+                <div className="form-group">
                     <label>코스 이미지</label>
                     <input type="file" onChange={onCourseImageChange} />
                 </div>
 
                 <h3>루트</h3>
+                <hr></hr>
                 {fields.map((item, index) => (
                     <div key={item.id}>
-                        <Controller
-                            control={control}
-                            name={`roots[${index}].title`}
-                            defaultValue={item.title || ''}
-                            render={({ field }) => (
-                                <div>
-                                    <label>루트 제목</label>
-                                    <input {...field} />
-                                    {errors.roots?.[index]?.title && <p className="error">{errors.roots[index].title.message}</p>}
-                                </div>
-                            )}
-                        />
-                        <Controller
-                            control={control}
-                            name={`roots[${index}].content`}
-                            defaultValue={item.content || ''}
-                            render={({ field }) => (
-                                <div>
-                                    <label>루트 내용</label>
-                                    <textarea {...field} />
-                                    {errors.roots?.[index]?.content && <p className="error">{errors.roots[index].content.message}</p>}
-                                </div>
-                            )}
-                        />
-                        <Controller
-                            control={control}
-                            name={`roots[${index}].address`}
-                            defaultValue={item.address || ''}
-                            render={({ field }) => (
-                                <div>
-                                    <label>루트 주소</label>
-                                    <input {...field} />
-                                    <button type="button" onClick={() => searchAddress(index)}>주소 검색</button>
-                                    {errors.roots?.[index]?.address && <p className="error">{errors.roots[index].address.message}</p>}
-                                </div>
-                            )}
-                        />
-                        <div>
+                        <div className="form-group">
+                            <Controller
+                                control={control}
+                                name={`roots[${index}].title`}
+                                defaultValue={item.title || ''}
+                                render={({ field }) => (
+                                    <div className="form-group" >
+                                        <label>루트 제목</label>
+                                        <input {...field} />
+                                        {errors.roots?.[index]?.title && <p className="error">{errors.roots[index].title.message}</p>}
+                                    </div>
+                                )}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <Controller
+                                control={control}
+                                name={`roots[${index}].content`}
+                                defaultValue={item.content || ''}
+                                render={({ field }) => (
+                                    <div className="form-group" >
+                                        <label>루트 내용</label>
+                                        <textarea {...field} />
+                                        {errors.roots?.[index]?.content && <p className="error">{errors.roots[index].content.message}</p>}
+                                    </div>
+                                )}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <Controller
+                                control={control}
+                                name={`roots[${index}].address`}
+                                defaultValue={item.address || ''}
+                                render={({ field }) => (
+                                    <div className="form-group" >
+                                        <label>루트 주소</label>
+                                        <input className="address-input" {...field} />
+                                        <button type="button" onClick={() => searchAddress(index)}>주소 검색</button>
+                                        {errors.roots?.[index]?.address && <p className="error">{errors.roots[index].address.message}</p>}
+                                    </div>
+                                )}
+                            />
+                        </div>
+                        <div className="form-group">
                             <label>루트 이미지</label>
                             <input type="file" onChange={onRootImageChange(index)} />
                         </div>
-                        <button type="button" onClick={() => remove(index)}>루트 삭제</button>
                     </div>
                 ))}
-                <button type="button" onClick={() => append({ title: '', content: '', address: '' })} disabled={fields.length >= 4}>
-                    루트 추가
-                </button>
-
-                <button type="submit">제출</button>
+                <div className="form-group">
+                    <button type="button" onClick={() => append({ title: '', content: '', address: '' })} disabled={rootImages.length >= 5}>
+                        루트 추가
+                    </button>
+                    <button type="button" onClick={handleRemoveLastRoot} disabled={fields.length === 0}>
+                        루트 삭제
+                    </button>
+                </div>
+                <div className="form-group">
+                    <button type="submit">제출</button>
+                </div>
             </form>
         </div>
     );

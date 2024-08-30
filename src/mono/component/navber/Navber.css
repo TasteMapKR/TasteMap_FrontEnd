@@ -5,7 +5,7 @@
     width: 100%;
     height: 60px;
     background-color: white;
-    border-bottom: 2px solid rgb(193, 0, 183); /* 파란색 아래쪽 테두리 */
+    border-bottom: 2px solid rgb(193, 0, 183); /* 핑크색 아래쪽 테두리 */
     display: flex;
     justify-content: space-between;
     align-items: center; /* 전체 요소들을 세로 중앙 정렬 */
@@ -35,6 +35,15 @@
 .navbar-right {
     display: flex;
     align-items: center; /* 버튼을 세로 중앙 정렬 */
+    padding-right: 30px;
+}
+
+.user-profile {
+    width: 40px; /* 프로필 이미지의 너비 */
+    height: 40px; /* 프로필 이미지의 높이 */
+    border-radius: 50%; /* 동그랗게 만들기 */
+    object-fit: cover; /* 이미지 비율 유지 */
+    margin-right: 10px; /* 이미지와 버튼 사이의 간격 */
 }
 
 .login-button {
@@ -45,7 +54,6 @@
     border: none;
     border-radius: 15px;
     cursor: pointer;
-    padding-right: -20px;
 }
 
 .login-button:hover {

@@ -13,7 +13,7 @@ const App = () => {
     return (
         <Router>
             <Navbar />
-            <div style={{ paddingTop: '60px', backgroundColor: '#ece4ff' }}> 
+            <div style={{ paddingTop: '60px' }}> 
                 <Routes>
                     <Route path="/login" element={<Login />} />
                     <Route path="/redirect" element={<RedirectHandler />} />

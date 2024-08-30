@@ -1,5 +1,5 @@
 /* 전체 컨테이너 스타일링 */
-.container {
+.feedback-container .container {
   max-width: 900px;
   margin: 0 auto;
   padding: 20px;
@@ -7,13 +7,16 @@
 }
 
 /* 피드백 차트와 통계 박스 스타일링 */
-.pie-chart-stats-container {
+.feedback-container .pie-chart-stats-container {
   margin-bottom: 30px;
   width: 95%;
   text-align: center;
 }
-
-.pie-chart-box {
+/* 자식 컴포넌트들이 100% 너비를 차지하도록 설정 */
+.pie-chart, .feedback-form, .feedback-list, .my-feedback {
+  width: 90%;
+}
+.feedback-container .pie-chart-box {
   width: 100%; 
   padding: 15px;
   border: 1px solid #ddd;
@@ -21,40 +24,40 @@
   background-color: #f9f9f9;
 }
 
-.pie-chart-box h3 {
+.feedback-container .pie-chart-box h3 {
   margin-bottom: 20px;
   font-size: 20px;
   font-weight: bold;
 }
 
-.pie-chart {
+.feedback-container .pie-chart {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 250px;
 }
 
-.feedback-stats {
+.feedback-container .feedback-stats {
   display: flex;
   justify-content: space-around;
   padding: 15px 0;
 }
 
-.feedback-stats p {
+.feedback-container .feedback-stats p {
   font-size: 16px;
   font-weight: bold;
 }
 
-.feedback-stats .positive {
+.feedback-container .feedback-stats .positive {
   color: #36A2EB; /* 긍정적 색상 */
 }
 
-.feedback-stats .negative {
+.feedback-container .feedback-stats .negative {
   color: #FF6384; /* 부정적 색상 */
 }
 
 /* 내 피드백 영역 스타일링 */
-.my-feedback {
+.feedback-container .my-feedback {
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 20px;
@@ -62,35 +65,35 @@
   margin-top: 20px;
 }
 
-.my-feedback h3 {
+.feedback-container .my-feedback h3 {
   font-size: 20px;
   font-weight: bold;
   margin-bottom: 20px;
 }
 
-.feedback-form {
+.feedback-container .feedback-form {
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 20px;
   background-color: #f9f9f9;
 }
 
-.feedback-form h3 {
+.feedback-container .feedback-form h3 {
   font-size: 20px;
   font-weight: bold;
   margin-bottom: 20px;
 }
 
-.feedback-form .form-label {
+.feedback-container .feedback-form .form-label {
   font-weight: bold;
 }
 
-.feedback-form .form-select {
+.feedback-container .feedback-form .form-select {
   border-radius: 5px;
 }
 
 /* 버튼 스타일링 */
-.btn {
+.feedback-container .btn {
   border-radius: 5px;
   padding: 10px 15px;
   font-size: 16px;
@@ -99,16 +102,16 @@
   border: none;
 }
 
-.btn:hover {
+.feedback-container .btn:hover {
   background-color: #6a1b9a; /* 버튼 색상 호버 상태 */
 }
 
 /* 피드백 리스트 스타일링 */
-.feedback-list {
+.feedback-container .feedback-list {
   margin-top: 40px;
 }
 
-.feedback-item {
+.feedback-container .feedback-item {
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 15px;
@@ -116,7 +119,7 @@
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.feedback-item .profile-image {
+.feedback-container .feedback-item .profile-image {
   width: 50px;
   height: 50px;
   border-radius: 50%;
@@ -124,29 +127,29 @@
   margin-right: 10px;
 }
 
-.feedback-item p {
+.feedback-container .feedback-item p {
   margin: 5px 0;
 }
 
-.feedback-item strong {
+.feedback-container .feedback-item strong {
   display: block;
   font-size: 16px;
   margin-bottom: 5px;
 }
 
 /* Pagination 스타일 */
-.pagination {
+.feedback-container .pagination {
   display: flex;
   justify-content: center;
   margin-top: 20px;
 }
 
-.pagination .page-item {
+.feedback-container .pagination .page-item {
   margin: 0 5px;
   cursor: pointer;
 }
 
-.pagination .page-item.active {
+.feedback-container .pagination .page-item.active {
   font-weight: bold;
   color: #8a2be2;
 }
